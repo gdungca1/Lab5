@@ -1,15 +1,66 @@
 // script.js
 
 const img = new Image(); // used to load image from <input> and draw to canvas
-
+var imageInput = document.getElementById("image-input");
+var c = document.getElementById("user-image");
+var ctx = c.getContext('2d');
+const clear = document.querySelector("[type='reset']");
+const read = document.querySelector("[type='button']");
+const submit = document.querySelector("[type='submit']");
+const voices = document.querySelector("voice-selection");
+const submitButton = document.getElementById('generate-meme');
+const volSlider = document.getElementById('volume-group');
+imageInput.addEventListener('input', () => {
+  img.src = URL.createObjectURL(imageInput.files[0]);
+});
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
-  // TODO
+  
+  ctx.fillStyle='black';
+  ctx.fillRect(0,0,c.width,c.height);
 
+  //clear
+
+  document.getElementById('generate-meme').reset();
+
+  var d = getDimmensions(c.width, c.height, img.width, img.height);
+
+  ctx.drawImage(img, d.startX, d.startY, d.width, d.height);
   // Some helpful tips:
   // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
+});
+
+submitButton.addEventListener('submit', (event) => {
+  event.preventDefault();
+  var topText = document.getElementById('text-top');
+  var botText = document.getElementById('text-bottom');
+  ctx.font = "30px Arial";
+  ctx.fillStyle = 'white';
+  ctx.fillText(topText.value, c.width/2, 50);
+  ctx.fillText(botText.value, c.width/2, 375);
+  submit.disabled = true;
+  clear.disabled = false;
+  read.disabled = false;
+  voices.disabled = false;
+
+  var speechList = SpeechSynthesis.getVoices();
+  for (var i = 0; i < speechList.length; i++) {
+
+  }
+});
+
+clear.addEventListener('click', () => {
+  ctx.clearRect(0,0, c.width, c.height);
+  submit.disabled = false;
+  clear.disabled = true;
+  read.disabled = true;
+  voices.disabled = true;
+});
+
+read.addEventListener('click', () => {
+
 });
 
 /**
